@@ -1,9 +1,14 @@
-import { cardTemplate } from '../index';
-import { openPopup } from './modal';
+// @todo: Темплейт карточки
+const cardTemplate = document.getElementById("card-template").content; // получила содержимое template, обратившись к его свойству content
 
 // @todo: Функция удаления карточки
 function deleteCard(card) {
   card.remove();
+}
+
+// @todo: Лайк карточки
+function likeCard (button) {
+  button.classList.toggle('card__like-button_is-active');
 }
 
 // @todo: Функция создания карточки
@@ -17,34 +22,22 @@ function createCard(link, name, deleteCard, likeCard, openCardImage) {
 
   const deleteButton = cardElement.querySelector(".card__delete-button");
   const deleteButtonClick = () => deleteCard(cardElement);
-
-  const popupCard = document.querySelector('.popup_type_image');
   
   // @todo: Удаление карточки
   deleteButton.addEventListener("click", deleteButtonClick);
-
-  // @todo: Лайк карточки
-  const buttonLike = cardElement.querySelector('.card__like-button');
-  
-  function likeCard (evt) {
-    evt.target.classList.toggle('card__like-button_is-active')};
-  buttonLike.addEventListener('click', likeCard);
   
   // @todo: Открытие попапа с картинкой
-  const popupImage = document.querySelector('.popup__image'); 
-  const popupImageText = document.querySelector('.popup__caption'); 
+  cardImage.addEventListener("click", (evt) => {
+    openCardImage({name, link});
+  });
 
-  function openCardImage( {name, link} ) {
-    popupImage.src = link;
-    popupImage.alt = name;
-    popupImageText.textContent = name;
-    openPopup(popupCard);
-  }
-
-  const openPopupImage = () => openCardImage({ name, link });
-  cardImage.addEventListener('click', openPopupImage);
+  //@todo: Лайк карточки
+  const buttonLike = cardElement.querySelector('.card__like-button');
+  buttonLike.addEventListener("click", function () {
+    likeCard(buttonLike);
+  });
 
   return cardElement;
 }
 
-export { createCard, deleteCard };
+export { createCard, deleteCard, likeCard };

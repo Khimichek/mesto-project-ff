@@ -2,29 +2,22 @@ import './styles/index.css'; // импорт главного файла сти�
 import { initialCards } from './scripts/cards';
 
 import { openPopup, closePopup } from './components/modal';
-import { createCard, deleteCard } from './components/card';
-
-// @todo: Темплейт карточки
- export const cardTemplate = document.getElementById("card-template").content; // получила содержимое template, обратившись к его свойству content
+import { createCard, deleteCard, likeCard } from './components/card';
 
 // @todo: DOM узлы
 const cardsList = document.querySelector(".places__list");
 const card = document.querySelector(".places__item");
 //открытие и закрытие модального окна
-const popup = document.querySelector('.popup');
-const editPopup = document.querySelector('.popup_type_edit');
-const newCardPopup = document.querySelector('.popup_type_new-card');
-const imagePopup = document.querySelector('.popup_type_image');
-const popupImg = document.querySelector('.popup__image');
+const profilePopup = document.querySelector('.popup_type_edit'); //попап редактирования профиля
+const newCardPopup = document.querySelector('.popup_type_new-card'); //попап добавления новой карточки
 const editButton = document.querySelector('.profile__edit-button');
 const addButton = document.querySelector('.profile__add-button');
 const profileName = document.querySelector('.profile__title');
 const profileJob = document.querySelector('.profile__description');
-let target = '';
 const closeButtonsArray = Array.from(document.querySelectorAll('.popup__close')); // Нашли все кнопки закрытия по универсальному селектору
-const popupsArray = Array.from(document.querySelectorAll('.popup'));
+export const popupsArray = Array.from(document.querySelectorAll('.popup'));
 //редактирование имени и информации о себе
-const formElement = document.querySelector('.popup__form');
+const formEditProfile = document.forms['edit-profile'];
 const nameInput = document.querySelector('.popup__input_type_name');
 const jobInput = document.querySelector('.popup__input_type_description');
 //форма добавления карточки
@@ -32,12 +25,10 @@ const placesList = document.querySelector('.places__list');
 const formNewCard = document.forms['new-place'];
 const placeNameInput = formNewCard.elements['place-name'];
 const linkInput = formNewCard.elements['link'];
-//открытие попапа с картинкой
-//const popupCard = document.querySelector('.popup_type_image');
 
 // @todo: Вывести карточки на страницу
 initialCards.forEach(function (card) {
-  const cardElement = createCard(card.link, card.name, deleteCard);
+  const cardElement = createCard(card.link, card.name, deleteCard, likeCard, openCardImage);
   cardsList.append(cardElement);
 });
 
@@ -45,7 +36,7 @@ initialCards.forEach(function (card) {
 editButton.addEventListener('click', () => {
   nameInput.value = profileName.textContent; // Перед открытием попапа инпуты заполняются актуальными данными
   jobInput.value = profileJob.textContent;
-  openPopup(editPopup);
+  openPopup(profilePopup);
 });
 
 // @todo: Открытие попапа добавления карточки
@@ -66,16 +57,6 @@ popupsArray.forEach(function (popup) {
   });
 });
 
-// @todo: Функция закрытия попапа по ESC
-function closePopupEsc(evt) {
-  if (evt.key === "Escape") {
-    const openedPopup = popupsArray.find(popup => popup.classList.contains('popup_is-opened'));
-    if (openedPopup) {
-      closePopup(openedPopup);
-    }
-  }
-}
-
 // @todo: Редактирование имени и информации о себе
 function handleFormSubmit(evt) {
     evt.preventDefault(); 
@@ -85,9 +66,9 @@ function handleFormSubmit(evt) {
 
     profileName.textContent = newNameInput;
     profileJob.textContent = newJobInput;
-    closePopup(popup);
+    closePopup(profilePopup);
 }
-formElement.addEventListener('submit', handleFormSubmit); 
+formEditProfile.addEventListener('submit', handleFormSubmit); 
 
 // @todo: Форма добавления карточки
 function addNewCard(evt) {
@@ -96,7 +77,7 @@ function addNewCard(evt) {
     const newPlaceNameInput = placeNameInput.value;
     const newLinkInput = linkInput.value;
 
-    const createNewCard = createCard(newLinkInput, newPlaceNameInput, deleteCard);
+    const createNewCard = createCard(newLinkInput, newPlaceNameInput, deleteCard, likeCard, openCardImage);
 
     placesList.prepend(createNewCard);
     closePopup(newCardPopup);
@@ -104,4 +85,16 @@ function addNewCard(evt) {
   }
 formNewCard.addEventListener('submit', addNewCard);
 
-export { closePopupEsc };
+// @todo: Функция открытия попапа с картинкой
+const popupCard = document.querySelector('.popup_type_image');
+const popupImage = document.querySelector('.popup__image'); 
+const popupImageText = document.querySelector('.popup__caption'); 
+
+export function openCardImage( {name, link} ) {
+  popupImage.src = link;
+  popupImage.alt = name;
+  popupImageText.textContent = name;
+  openPopup(popupCard);
+}
+
+
