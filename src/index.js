@@ -4,7 +4,28 @@ import { initialCards } from './scripts/cards';
 import { openPopup, closePopup } from './components/modal';
 import { createCard, deleteCard, likeCard } from './components/card';
 
-import { enableValidation, validationConfig, clearValidation } from './components/validation'
+import { enableValidation, validationConfig, clearValidation } from './components/validation';
+
+import { getUser, getCards } from './components/api';
+
+Promise.all([getUser(), getCards()])
+/*  Можно сразу деструктурировать полученный кортеж */
+   .then(([user, cards]) => {
+    profileName.textContent = user.name;
+    profileJob.textContent = user.about;
+    cards.forEach((card) => {
+      //createCard(link, name, deleteCard, likeCard, openCardImage);
+      //cardList.append(createCard(link, name, deleteCard, likeCard, openCardImage))
+      const cardElement = createCard(card.link, card.name, deleteCard, likeCard, openCardImage);
+      cardsList.append(cardElement);
+      /*initialCards.forEach(function (card) {
+        const cardElement = createCard(card.link, card.name, deleteCard, likeCard, openCardImage);
+        cardsList.append(cardElement);*/
+      });
+    })
+   .catch((err) => {
+    console.log(`Ошибка: ${err}`);
+   })
 
 // @todo: DOM узлы
 const cardsList = document.querySelector(".places__list");
@@ -27,12 +48,12 @@ const placesList = document.querySelector('.places__list');
 const formNewCard = document.forms['new-place'];
 const placeNameInput = formNewCard.elements['place-name'];
 const linkInput = formNewCard.elements['link'];
-
+/*
 // @todo: Вывести карточки на страницу
 initialCards.forEach(function (card) {
   const cardElement = createCard(card.link, card.name, deleteCard, likeCard, openCardImage);
   cardsList.append(cardElement);
-});
+});*/
 
 // @todo: Открытие попапа редактирования
 editButton.addEventListener('click', () => {
