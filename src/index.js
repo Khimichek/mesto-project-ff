@@ -6,7 +6,7 @@ import { createCard, deleteCard, likeCard } from './components/card';
 
 import { enableValidation, validationConfig, clearValidation } from './components/validation';
 
-import { getUser, getCards, editProfile } from './components/api';
+import { getUser, getCards, editProfile, addCard } from './components/api';
 
 Promise.all([getUser(), getCards()])
 /*  Можно сразу деструктурировать полученный кортеж */
@@ -89,35 +89,38 @@ popupsArray.forEach(function (popup) {
 
 // @todo: Редактирование имени и информации о себе
 function handleFormSubmit(evt) {
-    evt.preventDefault(); 
-    editProfile({ name: nameInput.value, about: jobInput.value })
-      .then(() => {
-        const newNameInput = nameInput.value;
-        const newJobInput = jobInput.value;
-        profileName.textContent = newNameInput;
-        profileJob.textContent = newJobInput;
-        enableValidation(validationConfig);
-        closePopup(profilePopup);
-      })
-      .catch((err) => {
-        console.log(err); // выводим ошибку в консоль
-      }); 
+  evt.preventDefault(); 
+  editProfile({ name: nameInput.value, about: jobInput.value })
+  .then(() => {
+    const newNameInput = nameInput.value;
+    const newJobInput = jobInput.value;
+    profileName.textContent = newNameInput;
+    profileJob.textContent = newJobInput;
+    enableValidation(validationConfig);
+    closePopup(profilePopup);
+  })
+  .catch((err) => {
+    console.log(err); // выводим ошибку в консоль
+  })
 }
 formEditProfile.addEventListener('submit', handleFormSubmit);
 
 // @todo: Форма добавления карточки
 function addNewCard(evt) {
-    evt.preventDefault(); 
-
-    const newPlaceNameInput = placeNameInput.value;
-    const newLinkInput = linkInput.value;
-
+  evt.preventDefault(); 
+  const newPlaceNameInput = placeNameInput.value;
+  const newLinkInput = linkInput.value;
+  addCard({name: placeNameInput.value, link: linkInput.value })
+  .then(() => {
     const createNewCard = createCard(newLinkInput, newPlaceNameInput, deleteCard, likeCard, openCardImage);
-
     placesList.prepend(createNewCard);
     closePopup(newCardPopup);
     formNewCard.reset();
-  }
+  })
+  .catch((err) => {
+    console.log(err); // выводим ошибку в консоль
+  })
+}
 formNewCard.addEventListener('submit', addNewCard);
 
 // @todo: Функция открытия попапа с картинкой

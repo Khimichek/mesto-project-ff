@@ -55,5 +55,16 @@ return fetch(`${config.baseUrl}/users/me`, {
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({ name, about })
-}).then (checkResponse)
+}).then (checkResponse);
+}
+
+export const addCard = ( {name, link} ) => {
+ return fetch(`${config.baseUrl}/cards`, { 
+  method: 'POST',
+  headers: {
+    authorization: 'ac5ba9ce-77da-4bd7-9861-d8abb08624e7',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ name, link })
+}).then (checkResponse);
 }

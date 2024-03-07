@@ -82,5 +82,5 @@ export function clearValidation(formElement, validationConfig) {
 		hideInputError(formElement, inputElement, validationConfig);
 	});
 	toggleButtonState(inputList, buttonElement, validationConfig);
-	buttonElement.classList.remove(inactiveButtonClass);
+	//buttonElement.classList.remove(inactiveButtonClass);
 }
