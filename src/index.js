@@ -6,7 +6,7 @@ import { createCard, deleteCard, likeCard } from './components/card';
 
 import { enableValidation, validationConfig, clearValidation } from './components/validation';
 
-import { getUser, getCards } from './components/api';
+import { getUser, getCards, editProfile } from './components/api';
 
 Promise.all([getUser(), getCards()])
 /*  Можно сразу деструктурировать полученный кортеж */
@@ -90,16 +90,20 @@ popupsArray.forEach(function (popup) {
 // @todo: Редактирование имени и информации о себе
 function handleFormSubmit(evt) {
     evt.preventDefault(); 
-
-    const newNameInput = nameInput.value;
-    const newJobInput = jobInput.value;
-
-    profileName.textContent = newNameInput;
-    profileJob.textContent = newJobInput;
-    enableValidation(validationConfig);
-    closePopup(profilePopup);
+    editProfile({ name: nameInput.value, about: jobInput.value })
+      .then(() => {
+        const newNameInput = nameInput.value;
+        const newJobInput = jobInput.value;
+        profileName.textContent = newNameInput;
+        profileJob.textContent = newJobInput;
+        enableValidation(validationConfig);
+        closePopup(profilePopup);
+      })
+      .catch((err) => {
+        console.log(err); // выводим ошибку в консоль
+      }); 
 }
-formEditProfile.addEventListener('submit', handleFormSubmit); 
+formEditProfile.addEventListener('submit', handleFormSubmit);
 
 // @todo: Форма добавления карточки
 function addNewCard(evt) {
