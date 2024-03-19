@@ -68,3 +68,35 @@ export const addCard = ( {name, link} ) => {
   body: JSON.stringify({ name, link })
 }).then (checkResponse);
 }
+
+export const putLike = (cardId) => {
+  //console.log(id);
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: 'PUT',
+    headers: {
+      authorization: 'ac5ba9ce-77da-4bd7-9861-d8abb08624e7',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id: `${cardId}`,
+      // likes: `${likes}`
+    })
+  })
+  .then (checkResponse);
+}
+
+export const removeLike = (cardId) => {
+  //console.log(id);
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: 'DELETE',
+    headers: {
+      authorization: 'ac5ba9ce-77da-4bd7-9861-d8abb08624e7',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id: `${cardId}`,
+      // likes: `${likes}`
+    })
+  })
+  .then (checkResponse);
+}

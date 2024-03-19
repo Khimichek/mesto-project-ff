@@ -2,33 +2,14 @@ import './styles/index.css'; // импорт главного файла сти�
 import { initialCards } from './scripts/cards';
 
 import { openPopup, closePopup } from './components/modal';
-import { createCard, deleteCard, likeCard } from './components/card';
+import { createCard, deleteCard } from './components/card';
 
 import { enableValidation, validationConfig, clearValidation } from './components/validation';
 
 import { getUser, getCards, editProfile, addCard } from './components/api';
 
-Promise.all([getUser(), getCards()])
-/*  Можно сразу деструктурировать полученный кортеж */
-   .then(([user, cards]) => {
-    profileName.textContent = user.name;
-    profileJob.textContent = user.about;
-    cards.forEach((card) => {
-      //createCard(link, name, deleteCard, likeCard, openCardImage);
-      //cardList.append(createCard(link, name, deleteCard, likeCard, openCardImage))
-      const cardElement = createCard(card.link, card.name, deleteCard, likeCard, openCardImage);
-      cardsList.append(cardElement);
-      /*initialCards.forEach(function (card) {
-        const cardElement = createCard(card.link, card.name, deleteCard, likeCard, openCardImage);
-        cardsList.append(cardElement);*/
-      });
-    })
-   .catch((err) => {
-    console.log(`Ошибка: ${err}`);
-   })
-
 // @todo: DOM узлы
-const cardsList = document.querySelector(".places__list");
+const cardList = document.querySelector(".places__list");
 const card = document.querySelector(".places__item");
 //открытие и закрытие модального окна
 const profilePopup = document.querySelector('.popup_type_edit'); //попап редактирования профиля
@@ -48,6 +29,35 @@ const placesList = document.querySelector('.places__list');
 const formNewCard = document.forms['new-place'];
 const placeNameInput = formNewCard.elements['place-name'];
 const linkInput = formNewCard.elements['link'];
+
+Promise.all([getUser(), getCards()])
+   .then(([user, cards]) => {
+    setUser(user);
+    setCards(cards, user);
+   })
+   .catch((err) => {
+    console.log(`Ошибка: ${err}`);
+   })
+
+const setUser = (user) => {
+  profileName.textContent = user.name;
+  profileJob.textContent = user.about;
+}
+
+const setCards = (cards, user) => {
+  cards.forEach((card) => {
+    const cardConfig = {
+      link: card.link,
+      name: card.name,
+      likes: card.likes,
+      owner: card.owner._id,
+      userId: user._id,
+      cardId: card._id
+    }
+    cardList.append(createCard(cardConfig, deleteCard, openCardImage));
+  });
+};
+
 /*
 // @todo: Вывести карточки на страницу
 initialCards.forEach(function (card) {
@@ -108,20 +118,27 @@ formEditProfile.addEventListener('submit', handleFormSubmit);
 // @todo: Форма добавления карточки
 function addNewCard(evt) {
   evt.preventDefault(); 
-  const newPlaceNameInput = placeNameInput.value;
-  const newLinkInput = linkInput.value;
-  addCard({name: placeNameInput.value, link: linkInput.value })
-  .then(() => {
-    const createNewCard = createCard(newLinkInput, newPlaceNameInput, deleteCard, likeCard, openCardImage);
-    placesList.prepend(createNewCard);
-    closePopup(newCardPopup);
-    formNewCard.reset();
+  addCard({name: placeNameInput.value, link: linkInput.value})
+  .then((card) => {
+    const cardConfig = {
+      link: card.link,
+      name: card.name,
+      likes: card.likes,
+      owner: card.owner._id,
+      //userId: user._id,
+      cardId: card._id
+    };
+    cardList.prepend(createCard(cardConfig, deleteCard, openCardImage));
+  formNewCard.reset();
+  clearValidation(formNewCard, validationConfig);
+  closePopup(newCardPopup)
   })
   .catch((err) => {
     console.log(err); // выводим ошибку в консоль
-  })
+  });
 }
 formNewCard.addEventListener('submit', addNewCard);
+
 
 // @todo: Функция открытия попапа с картинкой
 const popupCard = document.querySelector('.popup_type_image');
