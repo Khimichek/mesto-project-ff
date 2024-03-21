@@ -1,18 +1,21 @@
-import { putLike, removeLike } from "./api";
+import { putLike, removeLike, removeCard } from "./api";
 
 // @todo: Темплейт карточки
 const cardTemplate = document.getElementById("card-template").content; // получила содержимое template, обратившись к его свойству content
 
 // @todo: Функция удаления карточки
-function deleteCard(card) {
-  card.remove();
+function deleteCard(card, cardId) {
+  removeCard(cardId)
+  .then(() => {
+    card.remove();
+  })
+  .catch((err) => {
+    console.log(err); // выводим ошибку в консоль
+  })
 }
 
-//const myID = '3f49a1cfbac0b09d7dd03c0a';
-
-
 // @todo: Функция создания карточки
-function createCard(cardConfig, deleteCard, openCardImage) {
+function createCard(cardConfig, deleteCard, openCardImage, userId) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true); // клонировала шаблон
   const cardTitle = cardElement.querySelector('.card__title');
   const cardImage = cardElement.querySelector(".card__image"); //переменная изображения
@@ -25,9 +28,17 @@ function createCard(cardConfig, deleteCard, openCardImage) {
   //const myId = _id;  
   
   const deleteButton = cardElement.querySelector(".card__delete-button");
-  const deleteButtonClick = () => deleteCard(cardElement);
-  // @todo: Удаление карточки
-  deleteButton.addEventListener("click", deleteButtonClick);
+  //const deleteButtonClick = () => deleteCard(cardElement, cardConfig.cardId);
+  
+  //Проверка на удаление корзинки 
+  if (cardConfig.owner === userId) {
+    // @todo: Удаление карточки
+    deleteButton.addEventListener("click", () => {
+    deleteCard(cardElement, cardConfig.cardId);
+    });
+  } else {
+    deleteButton.remove();
+    }
   
   // @todo: Открытие попапа с картинкой
   cardImage.addEventListener("click", (evt) => {
@@ -44,7 +55,7 @@ function createCard(cardConfig, deleteCard, openCardImage) {
   cardLikeCounter.textContent = cardConfig.likes.length;
 
   cardConfig.likes.forEach((card) => {
-    if (card._id === cardConfig.userId) {
+    if (card._id === userId) {
       buttonLike.classList.add("card__like-button_is-active");
     }
   });
@@ -65,6 +76,7 @@ function createCard(cardConfig, deleteCard, openCardImage) {
       });
     }
   });
+
   return cardElement;
 }
 

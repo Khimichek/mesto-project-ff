@@ -100,3 +100,15 @@ export const removeLike = (cardId) => {
   })
   .then (checkResponse);
 }
+
+export const removeCard = (cardId) => {
+  return fetch(`${config.baseUrl}/cards/${cardId}`, {
+    method: 'DELETE',
+    headers: {
+      authorization: 'ac5ba9ce-77da-4bd7-9861-d8abb08624e7',
+      'Content-Type': 'application/json'
+    },
+  })
+  .then(checkResponse);
+}
+

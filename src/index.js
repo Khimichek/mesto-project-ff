@@ -8,6 +8,8 @@ import { enableValidation, validationConfig, clearValidation } from './component
 
 import { getUser, getCards, editProfile, addCard } from './components/api';
 
+let userId;
+
 // @todo: DOM узлы
 const cardList = document.querySelector(".places__list");
 const card = document.querySelector(".places__item");
@@ -42,6 +44,7 @@ Promise.all([getUser(), getCards()])
 const setUser = (user) => {
   profileName.textContent = user.name;
   profileJob.textContent = user.about;
+  userId = user._id;
 }
 
 const setCards = (cards, user) => {
@@ -51,10 +54,10 @@ const setCards = (cards, user) => {
       name: card.name,
       likes: card.likes,
       owner: card.owner._id,
-      userId: user._id,
+      //userId: user._id,
       cardId: card._id
     }
-    cardList.append(createCard(cardConfig, deleteCard, openCardImage));
+    cardList.append(createCard(cardConfig, deleteCard, openCardImage, userId));
   });
 };
 
@@ -128,7 +131,7 @@ function addNewCard(evt) {
       //userId: user._id,
       cardId: card._id
     };
-    cardList.prepend(createCard(cardConfig, deleteCard, openCardImage));
+    cardList.prepend(createCard(cardConfig, deleteCard, openCardImage, userId));
   formNewCard.reset();
   clearValidation(formNewCard, validationConfig);
   closePopup(newCardPopup)
