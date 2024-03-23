@@ -37,10 +37,7 @@ export const getCards = () => {
 export const editProfile = ( {name, about} ) => {
 return fetch(`${config.baseUrl}/users/me`, {
   method: 'PATCH',
-  headers: {
-    authorization: 'ac5ba9ce-77da-4bd7-9861-d8abb08624e7',
-    'Content-Type': 'application/json'
-  },
+  headers: config.headers,
   body: JSON.stringify({ name, about })
 }).then (checkResponse);
 }
@@ -49,10 +46,7 @@ return fetch(`${config.baseUrl}/users/me`, {
 export const addCard = ( {name, link} ) => {
  return fetch(`${config.baseUrl}/cards`, { 
   method: 'POST',
-  headers: {
-    authorization: 'ac5ba9ce-77da-4bd7-9861-d8abb08624e7',
-    'Content-Type': 'application/json'
-  },
+  headers: config.headers,
   body: JSON.stringify({ name, link })
 }).then (checkResponse);
 }
@@ -61,10 +55,7 @@ export const addCard = ( {name, link} ) => {
 export const putLike = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: 'PUT',
-    headers: {
-      authorization: 'ac5ba9ce-77da-4bd7-9861-d8abb08624e7',
-      'Content-Type': 'application/json'
-    },
+    headers: config.headers,
     body: JSON.stringify({
       id: `${cardId}`,
     })
@@ -76,10 +67,7 @@ export const putLike = (cardId) => {
 export const removeLike = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: 'DELETE',
-    headers: {
-      authorization: 'ac5ba9ce-77da-4bd7-9861-d8abb08624e7',
-      'Content-Type': 'application/json'
-    },
+    headers: config.headers,
     body: JSON.stringify({
       id: `${cardId}`,
     })
@@ -91,10 +79,7 @@ export const removeLike = (cardId) => {
 export const removeCard = (cardId) => {
   return fetch(`${config.baseUrl}/cards/${cardId}`, {
     method: 'DELETE',
-    headers: {
-      authorization: 'ac5ba9ce-77da-4bd7-9861-d8abb08624e7',
-      'Content-Type': 'application/json'
-    },
+    headers: config.headers,
   })
   .then(checkResponse);
 }
@@ -103,10 +88,7 @@ export const removeCard = (cardId) => {
 export const editAvatar = (avatar) => {
   return fetch(`${config.baseUrl}/users/me/avatar`, {
     method: 'PATCH',
-    headers: {
-      authorization: 'ac5ba9ce-77da-4bd7-9861-d8abb08624e7',
-      'Content-Type': 'application/json'
-    },
+    headers: config.headers,
     body: JSON.stringify({avatar}),
   })
   .then (checkResponse);
