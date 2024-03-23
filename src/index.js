@@ -3,7 +3,7 @@ import { openPopup, closePopup, popupsArray } from './components/modal';
 import { createCard, deleteCard, likeCard } from './components/card';
 import { enableValidation, validationConfig, clearValidation } from './components/validation';
 import { getUser, getCards, editProfile, addCard, editAvatar } from './components/api';
-
+import { renderLoading } from './components/utils'
 // @todo: DOM узлы
 const cardList = document.querySelector(".places__list");
 //открытие и закрытие модального окна
@@ -182,15 +182,6 @@ function openCardImage( {name, link} ) {
   popupImageText.textContent = name;
   openPopup(popupCard);
 }
-
-// @todo: Меняем Сохнанить на Сохранение... во время загрузки
-function renderLoading(button, isLoading) {
-  if (isLoading) {
-    button.textContent = `Сохранение...`;
-  } else {
-    button.textContent = `Сохранить`;
-    }
-  }
 
 //@todo: Включение валидации
 enableValidation(validationConfig);
