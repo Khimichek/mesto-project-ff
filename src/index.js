@@ -76,8 +76,7 @@ editButton.addEventListener('click', () => {
 
 // @todo: Открытие попапа добавления карточки
 addButton.addEventListener('click', ()=> {
-  placeNameInput.value = '';
-  linkInput.value = '';
+  formNewCard.reset();
   clearValidation(newCardPopup, validationConfig);
   openPopup(newCardPopup); 
 });
@@ -85,7 +84,7 @@ addButton.addEventListener('click', ()=> {
 // @todo: Открытие попапа смены аватара
 avatarContainer.addEventListener('click', ()=> {
   console.dir(avatarContainer);
-  linkAvatarInput.value = '';
+  formNewAvatar.reset();
   clearValidation(editAvatarPopup, validationConfig);
   openPopup(editAvatarPopup); 
 });
