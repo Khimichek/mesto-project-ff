@@ -1,5 +1,5 @@
 import './styles/index.css'; // импорт главного файла стилей 
-import { openPopup, closePopup } from './components/modal';
+import { openPopup, closePopup, popupsArray } from './components/modal';
 import { createCard, deleteCard, likeCard } from './components/card';
 import { enableValidation, validationConfig, clearValidation } from './components/validation';
 import { getUser, getCards, editProfile, addCard, editAvatar } from './components/api';
@@ -15,7 +15,6 @@ const addButton = document.querySelector('.profile__add-button');
 const profileName = document.querySelector('.profile__title');
 const profileJob = document.querySelector('.profile__description');
 const closeButtonsArray = Array.from(document.querySelectorAll('.popup__close')); // Нашли все кнопки закрытия по универсальному селектору
-export const popupsArray = Array.from(document.querySelectorAll('.popup'));
 //редактирование имени и информации о себе
 const formEditProfile = document.forms['edit-profile'];
 const nameInput = document.querySelector('.popup__input_type_name');
@@ -181,7 +180,7 @@ const popupCard = document.querySelector('.popup_type_image');
 const popupImage = document.querySelector('.popup__image'); 
 const popupImageText = document.querySelector('.popup__caption'); 
 
-export function openCardImage( {name, link} ) {
+function openCardImage( {name, link} ) {
   popupImage.src = link;
   popupImage.alt = name;
   popupImageText.textContent = name;
