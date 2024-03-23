@@ -105,7 +105,7 @@ popupsArray.forEach(function (popup) {
 });
 
 // @todo: Редактирование имени и информации о себе
-function handleFormSubmit(evt) {
+function submitEditProfileForm(evt) {
   evt.preventDefault(); 
   renderLoading(saveEditProfileButton, true);
   editProfile({ name: nameInput.value, about: jobInput.value })
@@ -124,7 +124,7 @@ function handleFormSubmit(evt) {
     renderLoading(saveEditProfileButton, false);
   }); 
 }
-formEditProfile.addEventListener('submit', handleFormSubmit);
+formEditProfile.addEventListener('submit', submitEditProfileForm);
 
 // @todo: Форма добавления карточки
 function addNewCard(evt) {
