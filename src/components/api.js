@@ -1,5 +1,3 @@
-import { createCard } from "./card";
-
 const config = {
   baseUrl: 'https://nomoreparties.co/v1/wff-cohort-7',
   headers: {
@@ -8,25 +6,13 @@ const config = {
   }
 }
 
-/*Запрос к серверу
-export const getCards = () => {
-  return fetch('https://nomoreparties.co/v1/wff-cohort-7/cards', {
-    headers: {
-      authorization: 'ac5ba9ce-77da-4bd7-9861-d8abb08624e7'
-    }
-  })
-    .then(res => res.json())
-    .then((result) => {
-      console.log(result);
-    });
-  }*/
-
 //Вынесли проверку res.ok в отдельную функцию
 function checkResponse(res) {
   if (res.ok) {
-      return res.json();
+    return res.json();
+  } else {
+      return Promise.reject(`Ошибка: ${res.status}`);
     }
-    return Promise.reject(`Ошибка: ${res.status}`);
 }
 
 //Загрузка информации о пользователе с сервера
@@ -44,9 +30,10 @@ export const getCards = () => {
     method: 'GET',
     headers: config.headers,
   })
-  .then (checkResponse);
+  .then(checkResponse);
 }
 
+//Редактирование профиля
 export const editProfile = ( {name, about} ) => {
 return fetch(`${config.baseUrl}/users/me`, {
   method: 'PATCH',
@@ -58,6 +45,7 @@ return fetch(`${config.baseUrl}/users/me`, {
 }).then (checkResponse);
 }
 
+//Добавление новой карточки
 export const addCard = ( {name, link} ) => {
  return fetch(`${config.baseUrl}/cards`, { 
   method: 'POST',
@@ -69,8 +57,8 @@ export const addCard = ( {name, link} ) => {
 }).then (checkResponse);
 }
 
+//Постановка лайка
 export const putLike = (cardId) => {
-  //console.log(id);
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: 'PUT',
     headers: {
@@ -79,14 +67,13 @@ export const putLike = (cardId) => {
     },
     body: JSON.stringify({
       id: `${cardId}`,
-      // likes: `${likes}`
     })
   })
   .then (checkResponse);
 }
 
+//Удаление лайка
 export const removeLike = (cardId) => {
-  //console.log(id);
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: 'DELETE',
     headers: {
@@ -95,12 +82,12 @@ export const removeLike = (cardId) => {
     },
     body: JSON.stringify({
       id: `${cardId}`,
-      // likes: `${likes}`
     })
   })
   .then (checkResponse);
 }
 
+//Удаление карточки
 export const removeCard = (cardId) => {
   return fetch(`${config.baseUrl}/cards/${cardId}`, {
     method: 'DELETE',
@@ -112,6 +99,7 @@ export const removeCard = (cardId) => {
   .then(checkResponse);
 }
 
+//Изменение аватара
 export const editAvatar = (avatar) => {
   return fetch(`${config.baseUrl}/users/me/avatar`, {
     method: 'PATCH',

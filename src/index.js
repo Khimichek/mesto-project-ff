@@ -1,18 +1,11 @@
 import './styles/index.css'; // импорт главного файла стилей 
-import { initialCards } from './scripts/cards';
-
 import { openPopup, closePopup } from './components/modal';
 import { createCard, deleteCard } from './components/card';
-
 import { enableValidation, validationConfig, clearValidation } from './components/validation';
-
 import { getUser, getCards, editProfile, addCard, editAvatar } from './components/api';
-
-let userId;
 
 // @todo: DOM узлы
 const cardList = document.querySelector(".places__list");
-const card = document.querySelector(".places__item");
 //открытие и закрытие модального окна
 const profilePopup = document.querySelector('.popup_type_edit'); //попап редактирования профиля
 const newCardPopup = document.querySelector('.popup_type_new-card'); //попап добавления новой карточки
@@ -28,15 +21,16 @@ const formEditProfile = document.forms['edit-profile'];
 const nameInput = document.querySelector('.popup__input_type_name');
 const jobInput = document.querySelector('.popup__input_type_description');
 //форма добавления карточки
-const placesList = document.querySelector('.places__list');
+let userId;
 const formNewCard = document.forms['new-place'];
 const placeNameInput = formNewCard.elements['place-name'];
 const linkInput = formNewCard.elements['link'];
 //форма смены аватара
+const avatarContainer = document.querySelector('.avatar__container');
 const formNewAvatar = document.forms['new-avatar'];
 const linkAvatarInput = formNewAvatar.elements['link'];
 const avatar = document.querySelector('.profile__image');
-//кнопка Сохранить
+//кнопка сохранить
 const saveEditProfileButton = document.querySelector('.popup__edit-profile-button');
 const saveNewPlaceButton = document.querySelector('.popup__new-place-button');
 const saveEditAvatarButton = document.querySelector('.popup__edit-avatar-button');
@@ -47,9 +41,10 @@ Promise.all([getUser(), getCards()])
     setCards(cards, user);
    })
    .catch((err) => {
-    console.log(`Ошибка: ${err}`);
+    console.log(err);
    })
 
+// @todo: Подгружаем информацию о пользователе
 const setUser = (user) => {
   profileName.textContent = user.name;
   profileJob.textContent = user.about;
@@ -57,6 +52,7 @@ const setUser = (user) => {
   userId = user._id;
 }
 
+// @todo: Вывод карточек на страницу
 const setCards = (cards, user) => {
   cards.forEach((card) => {
     const cardConfig = {
@@ -64,19 +60,11 @@ const setCards = (cards, user) => {
       name: card.name,
       likes: card.likes,
       owner: card.owner._id,
-      //userId: user._id,
       cardId: card._id
     }
     cardList.append(createCard(cardConfig, deleteCard, openCardImage, userId));
   });
 };
-
-/*
-// @todo: Вывести карточки на страницу
-initialCards.forEach(function (card) {
-  const cardElement = createCard(card.link, card.name, deleteCard, likeCard, openCardImage);
-  cardsList.append(cardElement);
-});*/
 
 // @todo: Открытие попапа редактирования
 editButton.addEventListener('click', () => {
@@ -95,8 +83,6 @@ addButton.addEventListener('click', ()=> {
 });
 
 // @todo: Открытие попапа смены аватара
-const avatarContainer = document.querySelector('.avatar__container');
-
 avatarContainer.addEventListener('click', ()=> {
   console.dir(avatarContainer);
   linkAvatarInput.value = '';
@@ -202,6 +188,7 @@ export function openCardImage( {name, link} ) {
   openPopup(popupCard);
 }
 
+// @todo: Меняем Сохнанить на Сохранение... во время загрузки
 function renderLoading(button, isLoading) {
   if (isLoading) {
     button.textContent = `Сохранение...`;
@@ -210,5 +197,5 @@ function renderLoading(button, isLoading) {
     }
   }
 
-//Включение валидации
+//@todo: Включение валидации
 enableValidation(validationConfig);
