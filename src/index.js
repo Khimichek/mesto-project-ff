@@ -114,7 +114,6 @@ function submitEditProfileForm(evt) {
     const newJobInput = jobInput.value;
     profileName.textContent = newNameInput;
     profileJob.textContent = newJobInput;
-    enableValidation(validationConfig);
     closePopup(profilePopup);
   })
   .catch((err) => {
