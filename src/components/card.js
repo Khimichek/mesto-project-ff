@@ -3,6 +3,11 @@ import { putLike, removeLike, removeCard } from "./api";
 // @todo: Темплейт карточки
 const cardTemplate = document.getElementById("card-template").content; // получила содержимое template, обратившись к его свойству content
 
+function getCardTemplate() {
+  const cloneCardTemplate = cardTemplate.querySelector(".card").cloneNode(true); // клонировала шаблон
+  return cloneCardTemplate;
+}
+
 // @todo: Функция удаления карточки
 export function deleteCard(card, cardId) {
   removeCard(cardId)
@@ -16,7 +21,7 @@ export function deleteCard(card, cardId) {
 
 // @todo: Функция создания карточки
 export function createCard(cardConfig, deleteCard, openCardImage, userId) {
-  const cardElement = cardTemplate.querySelector(".card").cloneNode(true); // клонировала шаблон
+  const cardElement = getCardTemplate();
   const cardTitle = cardElement.querySelector('.card__title');
   const cardImage = cardElement.querySelector(".card__image"); //переменная изображения
   const deleteButton = cardElement.querySelector(".card__delete-button");
