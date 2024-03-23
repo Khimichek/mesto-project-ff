@@ -14,7 +14,9 @@
   </header>
   <main class="content">
     <section class="profile page__section">
-      <div class="profile__image" style="background-image: url(<%=require('./images/avatar.jpg')%>);"></div>
+      <div class="avatar__container">
+        <div class="profile__image" style="background-image: url(<%=require('./images/avatar.jpg')%>);"></div>
+      </div>
       <div class="profile__info">
         <h1 class="profile__title">Жак-Ив Кусто</h1>
         <button class="profile__edit-button" type="button"></button>
@@ -45,7 +47,7 @@
           <input type="text" name="description" id="description-input" class="popup__input popup__input_type_description" placeholder="Занятие" required minlength="2" maxlength="200" pattern="[A-Za-zА-Яа-яЁё\s\-]+" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы">
           <span class="description-input-error popup__input-error popup-error" ></span>
         </label>
-        <button type="submit" class="button popup__button">Сохранить</button>
+        <button type="submit" class="button popup__button popup__edit-profile-button">Сохранить</button>
       </form>
     </div>
   </div>
@@ -58,7 +60,7 @@
         <span class="place-name-input-error popup__input-error popup-error" ></span>
         <input type="url" name="link" id="link-input" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
         <span class="link-input-error popup__input-error popup-error" ></span>
-        <button type="submit" class="button popup__button">Сохранить</button>
+        <button type="submit" class="button popup__button popup__new-place-button">Сохранить</button>
       </form>
     </div>
   </div>
@@ -68,6 +70,17 @@
       <img src="" alt="" class="popup__image">
       <p class="popup__caption"></p>
     </div>
+  </div>
+</div>
+<div class="popup popup_is-animated popup_type_edit-avatar">
+  <div class="popup__content">
+    <button type="button" class="popup__close"></button>
+    <h3 class="popup__title">Обновить аватар</h3>
+    <form class="popup__form" name="new-avatar">
+      <input type="url" name="link" id="link-input" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
+      <span class="link-input-error popup__input-error popup-error" ></span>
+      <button type="submit" class="button popup__button popup__edit-avatar-button">Сохранить</button>
+    </form>
   </div>
 </div>
 <template id="card-template">

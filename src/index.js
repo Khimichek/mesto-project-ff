@@ -6,7 +6,7 @@ import { createCard, deleteCard } from './components/card';
 
 import { enableValidation, validationConfig, clearValidation } from './components/validation';
 
-import { getUser, getCards, editProfile, addCard } from './components/api';
+import { getUser, getCards, editProfile, addCard, editAvatar } from './components/api';
 
 let userId;
 
@@ -16,6 +16,7 @@ const card = document.querySelector(".places__item");
 //открытие и закрытие модального окна
 const profilePopup = document.querySelector('.popup_type_edit'); //попап редактирования профиля
 const newCardPopup = document.querySelector('.popup_type_new-card'); //попап добавления новой карточки
+const editAvatarPopup = document.querySelector('.popup_type_edit-avatar');
 const editButton = document.querySelector('.profile__edit-button');
 const addButton = document.querySelector('.profile__add-button');
 const profileName = document.querySelector('.profile__title');
@@ -31,6 +32,14 @@ const placesList = document.querySelector('.places__list');
 const formNewCard = document.forms['new-place'];
 const placeNameInput = formNewCard.elements['place-name'];
 const linkInput = formNewCard.elements['link'];
+//форма смены аватара
+const formNewAvatar = document.forms['new-avatar'];
+const linkAvatarInput = formNewAvatar.elements['link'];
+const avatar = document.querySelector('.profile__image');
+//кнопка Сохранить
+const saveEditProfileButton = document.querySelector('.popup__edit-profile-button');
+const saveNewPlaceButton = document.querySelector('.popup__new-place-button');
+const saveEditAvatarButton = document.querySelector('.popup__edit-avatar-button');
 
 Promise.all([getUser(), getCards()])
    .then(([user, cards]) => {
@@ -44,6 +53,7 @@ Promise.all([getUser(), getCards()])
 const setUser = (user) => {
   profileName.textContent = user.name;
   profileJob.textContent = user.about;
+  avatar.style = `background-image: url(${user.avatar})`;
   userId = user._id;
 }
 
@@ -84,6 +94,15 @@ addButton.addEventListener('click', ()=> {
   openPopup(newCardPopup); 
 });
 
+// @todo: Открытие попапа смены аватара
+const avatarContainer = document.querySelector('.avatar__container');
+
+avatarContainer.addEventListener('click', ()=> {
+  console.dir(avatarContainer);
+  linkAvatarInput.value = '';
+  clearValidation(editAvatarPopup, validationConfig);
+  openPopup(editAvatarPopup); 
+});
 
 // @todo: Закрытие попапа по крестику
 closeButtonsArray.forEach((button) => {
@@ -103,6 +122,7 @@ popupsArray.forEach(function (popup) {
 // @todo: Редактирование имени и информации о себе
 function handleFormSubmit(evt) {
   evt.preventDefault(); 
+  renderLoading(saveEditProfileButton, true);
   editProfile({ name: nameInput.value, about: jobInput.value })
   .then(() => {
     const newNameInput = nameInput.value;
@@ -115,12 +135,16 @@ function handleFormSubmit(evt) {
   .catch((err) => {
     console.log(err); // выводим ошибку в консоль
   })
+  .finally(() => {
+    renderLoading(saveEditProfileButton, false);
+  }); 
 }
 formEditProfile.addEventListener('submit', handleFormSubmit);
 
 // @todo: Форма добавления карточки
 function addNewCard(evt) {
   evt.preventDefault(); 
+  renderLoading(saveNewPlaceButton, true);
   addCard({name: placeNameInput.value, link: linkInput.value})
   .then((card) => {
     const cardConfig = {
@@ -138,10 +162,33 @@ function addNewCard(evt) {
   })
   .catch((err) => {
     console.log(err); // выводим ошибку в консоль
-  });
+  })
+  .finally(() => {
+    renderLoading(saveNewPlaceButton, false);
+  }); 
 }
 formNewCard.addEventListener('submit', addNewCard);
 
+// @todo: Форма смены аватара
+function addNewAvatar(evt) {
+  evt.preventDefault(); 
+  renderLoading(saveEditAvatarButton, true);
+  editAvatar(linkAvatarInput.value)
+  .then(() => {
+    avatar.style = `background-image: url(${linkAvatarInput.value})`;
+    formNewAvatar.reset();
+    clearValidation(formNewAvatar, validationConfig);
+    closePopup(editAvatarPopup)
+    console.dir(avatar);
+  })
+  .catch((err) => {
+    console.log(err); // выводим ошибку в консоль
+  })
+  .finally(() => {
+    renderLoading(saveEditAvatarButton, false);
+  }); 
+}
+formNewAvatar.addEventListener('submit', addNewAvatar);
 
 // @todo: Функция открытия попапа с картинкой
 const popupCard = document.querySelector('.popup_type_image');
@@ -154,6 +201,14 @@ export function openCardImage( {name, link} ) {
   popupImageText.textContent = name;
   openPopup(popupCard);
 }
+
+function renderLoading(button, isLoading) {
+  if (isLoading) {
+    button.textContent = `Сохранение...`;
+  } else {
+    button.textContent = `Сохранить`;
+    }
+  }
 
 //Включение валидации
 enableValidation(validationConfig);

@@ -112,3 +112,14 @@ export const removeCard = (cardId) => {
   .then(checkResponse);
 }
 
+export const editAvatar = (avatar) => {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: {
+      authorization: 'ac5ba9ce-77da-4bd7-9861-d8abb08624e7',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({avatar}),
+  })
+  .then (checkResponse);
+}
