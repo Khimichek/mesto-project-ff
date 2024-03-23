@@ -140,7 +140,6 @@ function addNewCard(evt) {
     };
     cardList.prepend(createCard(cardConfig, userId, deleteCard, openCardImage, likeCard));
   formNewCard.reset();
-  clearValidation(formNewCard, validationConfig);
   closePopup(newCardPopup)
   })
   .catch((err) => {
@@ -160,7 +159,6 @@ function addNewAvatar(evt) {
   .then(() => {
     avatar.style = `background-image: url(${linkAvatarInput.value})`;
     formNewAvatar.reset();
-    clearValidation(formNewAvatar, validationConfig);
     closePopup(editAvatarPopup)
     console.dir(avatar);
   })
