@@ -1,6 +1,6 @@
 import './styles/index.css'; // импорт главного файла стилей 
 import { openPopup, closePopup } from './components/modal';
-import { createCard, deleteCard } from './components/card';
+import { createCard, deleteCard, likeCard } from './components/card';
 import { enableValidation, validationConfig, clearValidation } from './components/validation';
 import { getUser, getCards, editProfile, addCard, editAvatar } from './components/api';
 
@@ -60,9 +60,10 @@ const setCards = (cards, user) => {
       name: card.name,
       likes: card.likes,
       owner: card.owner._id,
-      cardId: card._id
+      cardId: card._id,
+      user: user._id,
     }
-    cardList.append(createCard(cardConfig, deleteCard, openCardImage, userId));
+    cardList.append(createCard(cardConfig, userId, deleteCard, openCardImage, likeCard));
   });
 };
 
@@ -132,16 +133,15 @@ function addNewCard(evt) {
   evt.preventDefault(); 
   renderLoading(saveNewPlaceButton, true);
   addCard({name: placeNameInput.value, link: linkInput.value})
-  .then((card) => {
+  .then((card, user) => {
     const cardConfig = {
       link: card.link,
       name: card.name,
       likes: card.likes,
       owner: card.owner._id,
-      //userId: user._id,
-      cardId: card._id
+      cardId: card._id,
     };
-    cardList.prepend(createCard(cardConfig, deleteCard, openCardImage, userId));
+    cardList.prepend(createCard(cardConfig, userId, deleteCard, openCardImage, likeCard));
   formNewCard.reset();
   clearValidation(formNewCard, validationConfig);
   closePopup(newCardPopup)

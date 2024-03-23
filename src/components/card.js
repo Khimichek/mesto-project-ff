@@ -3,8 +3,9 @@ import { putLike, removeLike, removeCard } from "./api";
 // @todo: Темплейт карточки
 const cardTemplate = document.getElementById("card-template").content; // получила содержимое template, обратившись к его свойству content
 
+// @todo: Функционал клонирования шаблона вынесен в отдельную функцию
 function getCardTemplate() {
-  const cloneCardTemplate = cardTemplate.querySelector(".card").cloneNode(true); // клонировала шаблон
+  const cloneCardTemplate = cardTemplate.querySelector(".card").cloneNode(true);
   return cloneCardTemplate;
 }
 
@@ -19,8 +20,31 @@ export function deleteCard(card, cardId) {
   })
 }
 
+// @todo: Функция лайка карточки
+export function likeCard(buttonLike, cardId, cardLikeCounter) {
+  if (!buttonLike.classList.contains('card__like-button_is-active')) {
+    buttonLike.classList.add('card__like-button_is-active');
+    putLike(cardId)
+    .then((result) => {
+      cardLikeCounter.textContent = result.likes.length;
+    })
+    .catch((err) => {
+      console.log(err); // выводим ошибку в консоль
+    })
+  } else {
+    buttonLike.classList.remove('card__like-button_is-active');
+    removeLike(cardId)
+    .then ((result) => {
+      cardLikeCounter.textContent = result.likes.length;
+    })
+    .catch((err) => {
+      console.log(err); // выводим ошибку в консоль
+    })
+  }
+}
+
 // @todo: Функция создания карточки
-export function createCard(cardConfig, deleteCard, openCardImage, userId) {
+export function createCard(cardConfig, userId, deleteCard, openCardImage, likeCard) {
   const cardElement = getCardTemplate();
   const cardTitle = cardElement.querySelector('.card__title');
   const cardImage = cardElement.querySelector(".card__image"); //переменная изображения
@@ -50,31 +74,20 @@ export function createCard(cardConfig, deleteCard, openCardImage, userId) {
     });
   });
 
-  //@todo: Лайк карточки
+  //@todo: Вывели текущее кол-во лайков
   cardLikeCounter.textContent = cardConfig.likes.length;
-
-  //@todo: Проверяем, лайкнута карточка нами или нет (если да, закрашиваем лайк при загрузке страницы)
-  cardConfig.likes.forEach((card) => {
-    if (card._id === userId) {
-      buttonLike.classList.add("card__like-button_is-active");
+  
+  //@todo: Проверка на наш лайк
+  cardConfig.likes.forEach((cardConfig) => {
+    if (cardConfig.card === cardConfig.user) {
+      buttonLike.classList.add('card__like-button_is-active');
     }
   });
 
   //@todo: Вызов функции лайка
-  buttonLike.addEventListener('click', function(evt) {
-    if (buttonLike.classList.contains('card__like-button_is-active')) {
-      evt.target.classList.toggle('card__like-button_is-active');
-      removeLike(cardConfig.cardId, 'DELETE')
-      .then((result) => {
-        cardLikeCounter.textContent = result.likes.length;
-      })
-    } else {
-      evt.target.classList.toggle('card__like-button_is-active');
-      putLike(cardConfig.cardId, 'PUT')
-      .then ((result) => {
-        cardLikeCounter.textContent = result.likes.length;
-      });
-    }
+  buttonLike.addEventListener("click", () => {
+    likeCard(buttonLike, cardConfig.cardId, cardLikeCounter);
   });
+
   return cardElement;
 }

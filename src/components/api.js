@@ -56,9 +56,6 @@ export const putLike = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: 'PUT',
     headers: config.headers,
-    body: JSON.stringify({
-      id: `${cardId}`,
-    })
   })
   .then (checkResponse);
 }
@@ -68,9 +65,6 @@ export const removeLike = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: 'DELETE',
     headers: config.headers,
-    body: JSON.stringify({
-      id: `${cardId}`,
-    })
   })
   .then (checkResponse);
 }
