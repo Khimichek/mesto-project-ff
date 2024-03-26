@@ -92,4 +92,4 @@ export function createCard(cardConfig, userId, deleteCard, openCardImage, likeCa
   return cardElement;
 }
 
-//////////
+// тест 2 
